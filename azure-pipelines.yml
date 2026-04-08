@@ -1,0 +1,24 @@
+trigger:
+- main
+
+pool:
+  name: Default   # seu self-hosted agent
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- script: dotnet restore StringExtensionsLib/StringExtensionsLib.csproj
+  displayName: Restore
+
+- script: dotnet build StringExtensionsLib/StringExtensionsLib.csproj --configuration $(buildConfiguration)
+  displayName: Build
+
+- script: dotnet pack StringExtensionsLib/StringExtensionsLib.csproj --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)
+  displayName: Pack
